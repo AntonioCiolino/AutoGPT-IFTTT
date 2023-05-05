@@ -52,8 +52,8 @@ exit /b 0
   exit /b 0
 
 :package
-   python -m zipfile -c AutoGPT_IFTTT.zip  src/AutoGPT_IFTTT
-   copy AutoGPT_IFTTT.zip %GPT_HOME%\plugins
+   python -m zipfile -c .\builds\AutoGPT_IFTTT.zip  src\AutoGPT_IFTTT
+   copy .\builds\AutoGPT_IFTTT.zip %GPT_HOME%\plugins
    python -m autogpt --debug 
    exit /b 0
 
