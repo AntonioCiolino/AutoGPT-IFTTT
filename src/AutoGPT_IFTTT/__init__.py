@@ -1,8 +1,12 @@
-"""This is a template for Auto-GPT plugins."""
+"""This is a plugin to IFTTT Webhooks for Auto-GPT"""
 import abc
-from typing import Any, Dict, List, Optional, Tuple, TypeVar, TypedDict
+import os
+from pathlib import Path
+from typing import Any, Dict, List, Optional, Tuple, TypedDict, TypeVar
 
-from abstract_singleton import AbstractSingleton, Singleton
+from auto_gpt_plugin_template import AutoGPTPluginTemplate
+from dotenv import load_dotenv
+
 
 PromptGenerator = TypeVar("PromptGenerator")
 
@@ -12,16 +16,55 @@ class Message(TypedDict):
     content: str
 
 
-class AutoGPTPluginTemplate(AbstractSingleton, metaclass=Singleton):
+class AutoGPT_IFTTT(AutoGPTPluginTemplate):
     """
-    This is a template for Auto-GPT plugins.
+    This is a plugin to IFTTT Webhooks for Auto-GPT
     """
 
     def __init__(self):
         super().__init__()
-        self._name = "Auto-GPT-Plugin-Template"
+
+  
+        with open(str(Path(os.getcwd()) / ".env"), "r", encoding="utf=8") as fp:
+            load_dotenv(stream=fp)
+
+
+        self._name = "AutoGPT-IFTTT"
         self._version = "0.1.0"
-        self._description = "This is a template for Auto-GPT plugins."
+        self._description = "AutoGPT IFTTT Webhooks integration."
+        self.ifttt_trigger = os.getenv("IFTTT_WEBHOOK_TRIGGER_NAME")
+        self.ifttt_key = os.getenv("IFTTT_KEY")
+        
+    @abc.abstractmethod
+    def can_handle_post_prompt(self) -> bool:
+        """This method is called to check that the plugin can
+        handle the post_prompt method.
+
+        Returns:
+            bool: True if the plugin can handle the post_prompt method."""
+        return True
+
+    @abc.abstractmethod
+    def post_prompt(self, prompt: PromptGenerator) -> PromptGenerator:
+        """This method is called just after the generate_prompt is called,
+            but actually before the prompt is generated.
+
+        Args:
+            prompt (PromptGenerator): The prompt generator.
+
+        Returns:
+            PromptGenerator: The prompt generator.
+        """
+        prompt.add_command(
+            "ifttt_webhook",
+            "Create a new webhook call",
+            {
+                "title": "<title>",
+                "summary": "<summary>",
+                "content": "<content>",
+            },
+            call_webhook,
+        )
 
     @abc.abstractmethod
     def can_handle_on_response(self) -> bool:
@@ -35,28 +78,6 @@ class AutoGPTPluginTemplate(AbstractSingleton, metaclass=Singleton):
     @abc.abstractmethod
     def on_response(self, response: str, *args, **kwargs) -> str:
         """This method is called when a response is received from the model."""
-        pass
-
-    @abc.abstractmethod
-    def can_handle_post_prompt(self) -> bool:
-        """This method is called to check that the plugin can
-        handle the post_prompt method.
-
-        Returns:
-            bool: True if the plugin can handle the post_prompt method."""
-        return False
-
-    @abc.abstractmethod
-    def post_prompt(self, prompt: PromptGenerator) -> PromptGenerator:
-        """This method is called just after the generate_prompt is called,
-            but actually before the prompt is generated.
-
-        Args:
-            prompt (PromptGenerator): The prompt generator.
-
-        Returns:
-            PromptGenerator: The prompt generator.
-        """
         pass
 
     @abc.abstractmethod
@@ -245,9 +266,7 @@ class AutoGPTPluginTemplate(AbstractSingleton, metaclass=Singleton):
         pass
 
     @abc.abstractmethod
-    def can_handle_text_embedding(
-        self, text: str
-    ) -> bool:
+    def can_handle_text_embedding(self, text: str) -> bool:
         """This method is called to check that the plugin can
           handle the text_embedding method.
         Args:
@@ -255,11 +274,9 @@ class AutoGPTPluginTemplate(AbstractSingleton, metaclass=Singleton):
           Returns:
               bool: True if the plugin can handle the text_embedding method."""
         return False
-    
+
     @abc.abstractmethod
-    def handle_text_embedding(
-        self, text: str
-    ) -> list:
+    def handle_text_embedding(self, text: str) -> list:
         """This method is called when the chat completion is done.
         Args:
             text (str): The text to be convert to embedding.
