@@ -19,7 +19,7 @@ Returns:
 """
 
 
-def call_webhook(title, summary, content):
+def call_webhook(title: str, summary: str , content: str):
     triggerName = os.getenv("IFTTT_WEBHOOK_TRIGGER_NAME")
     key = os.getenv("IFTTT_KEY")
 
