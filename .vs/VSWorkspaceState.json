@@ -1,7 +1,10 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\builds",
+    "\\src",
+    "\\src\\autogpt_ifttt"
   ],
-  "SelectedNode": "\\C:\\Users\\anton\\Documents\\repos",
+  "SelectedNode": "\\README.md",
   "PreviewInSolutionExplorer": false
 }
