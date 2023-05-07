@@ -1,4 +1,4 @@
-# AutoGPT_IFTTT
+# AutoGPT_IFTTT.
 A webhook connector for If-This-Then-That
 
 ### Plugin Installation Steps
