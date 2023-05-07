@@ -17,7 +17,7 @@ class TestAutoGPT_IFTTT(unittest.TestCase):
 
     def setUp(self):
         os.environ["IFTTT_WEBHOOK_TRIGGER_NAME"] = "TestAutoGPT"
-        os.environ["IFTTT_KEY"] = "bTDGYU8MfQ8ZM6zrIoHVyx"
+        os.environ["IFTTT_KEY"] = "TESTKEY"
         self.title = "title"
         self.content = "this is content"
         self.summary= "user testing summary"
